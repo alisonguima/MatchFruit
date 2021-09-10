@@ -44,5 +44,10 @@ public class Fruit {
 	@Enumerated(EnumType.STRING)
 	@Column(name="ds_seasons")
 	private Seasons seasons;
-	
+
+	@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)
+	@ManyToMany(mappedBy = "favorites")
+	private List<User> usuarios;
+
 }

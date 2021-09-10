@@ -38,4 +38,12 @@ public class User {
 	@NotBlank(message = "Digite uma senha válida.")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	public String pass;
+
+	@ManyToMany
+	@JoinTable(
+			name = "tb_favorites", 
+			joinColumns = @JoinColumn(name = "user_id"), 
+			inverseJoinColumns = @JoinColumn(name = "fruit_id"))
+	private List<Fruit> favorites;
+
 }

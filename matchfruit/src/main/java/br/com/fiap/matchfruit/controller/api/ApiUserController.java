@@ -82,4 +82,31 @@ public class ApiUserController {
 
 		return ResponseEntity.ok(user);
 	}
+
+	@PutMapping("/{userId}/fruit/{fruitId}")
+	public ResponseEntity<User> addFruit(@PathVariable Long userId, @PathVariable Long fruitId) {
+		Optional<User> optUser = userRepo.findById(userId);
+		Optional<Fruit> optFruit = fruitRepo.findById(fruitId);
+		
+		if (optUser.isEmpty() || optFruit.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		User user = optUser.get();
+		Fruit fruit = optFruit.get();
+		List<Fruit> favorites = user.getFavorites();
+		favorites.add(fruit);
+		user.setFavorites(favorites);
+		
+		System.out.println("Lista de favoritos:");
+		for (Fruit item : user.getFavorites()) {
+			System.out.println(item.getName());
+			System.out.println(item.getInformations());
+			System.out.println(item.getBenefits());
+		}
+		
+		userRepo.save(user);
+		
+		return ResponseEntity.ok(user);
+	}
 }
