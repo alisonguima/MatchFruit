@@ -30,7 +30,7 @@ public class User {
 	@NotBlank(message = "O nome é obrigatório. Digite um nome.")
 	public String name;
 	
-	@Column(name="TB_USER", unique = true)
+	@Column(name="ds_email", unique = true)
 	@Email(message = "Precisa ser um email válido")
 	public String email;
 	
