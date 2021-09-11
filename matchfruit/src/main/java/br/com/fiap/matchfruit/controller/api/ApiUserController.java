@@ -69,18 +69,24 @@ public class ApiUserController {
 
 	@PutMapping("{id}")
 	public ResponseEntity<User> update(@Valid @RequestBody User newUser, @PathVariable Long id) {
-		Optional<User> optional = repository.findById(id);
-		if (optional.isEmpty()) {
+		Optional<User> optional = userRepo.findById(id);
+		if(optional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 		User user = optional.get();
 		user.setName(newUser.getName());
 		user.setEmail(newUser.getEmail());
 		user.setPass(newUser.getPass());
-
-		repository.save(user);
-
+		if( newUser.getFavorites() != null ) {
+			if ( !newUser.getFavorites().isEmpty() ) {
+				user.setFavorites(newUser.getFavorites());
+			}
+		}
+		
+		userRepo.save(user);
+		
 		return ResponseEntity.ok(user);
+		
 	}
 
 	@PutMapping("/{userId}/fruit/{fruitId}")
@@ -94,19 +100,13 @@ public class ApiUserController {
 		
 		User user = optUser.get();
 		Fruit fruit = optFruit.get();
-		List<Fruit> favorites = user.getFavorites();
+		Set<Fruit> favorites = user.getFavorites();
 		favorites.add(fruit);
 		user.setFavorites(favorites);
-		
-		System.out.println("Lista de favoritos:");
-		for (Fruit item : user.getFavorites()) {
-			System.out.println(item.getName());
-			System.out.println(item.getInformations());
-			System.out.println(item.getBenefits());
-		}
 		
 		userRepo.save(user);
 		
 		return ResponseEntity.ok(user);
 	}
+	
 }

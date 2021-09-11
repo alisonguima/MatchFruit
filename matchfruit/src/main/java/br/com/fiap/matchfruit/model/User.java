@@ -1,5 +1,7 @@
 package br.com.fiap.matchfruit.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,6 +46,6 @@ public class User {
 			name = "tb_favorites", 
 			joinColumns = @JoinColumn(name = "user_id"), 
 			inverseJoinColumns = @JoinColumn(name = "fruit_id"))
-	private List<Fruit> favorites;
+	private Set<Fruit> favorites;
 
 }
