@@ -31,7 +31,10 @@ import br.com.fiap.matchfruit.repository.UserRepository;
 public class ApiUserController {
 
 	@Autowired
-	private UserRepository repository;
+	private UserRepository userRepo;
+
+	@Autowired
+	private FruitRepository fruitRepo;
 
 	@GetMapping()
 	@Cacheable("users")
@@ -39,31 +42,31 @@ public class ApiUserController {
 			@PageableDefault(size = 20) Pageable pageable) {
 
 		if (name == null) {
-			return repository.findAll(pageable);
+			return userRepo.findAll(pageable);
 		}
-		return repository.findByNameLikeIgnoreCase("%" + name + "%", pageable);
+		return userRepo.findByNameLikeIgnoreCase("%" + name + "%", pageable);
 	}
 
 	@PostMapping()
 	@CacheEvict(value = "users", allEntries = true)
 	public ResponseEntity<User> create(@RequestBody User user, UriComponentsBuilder uriBuilder) {
-		repository.save(user);
+		userRepo.save(user);
 		URI uri = uriBuilder.path("/api/user/{id}").buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("{id}")
 	public ResponseEntity<User> get(@PathVariable Long id) {
-		return ResponseEntity.of(repository.findById(id));
+		return ResponseEntity.of(userRepo.findById(id));
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<User> delete(@PathVariable Long id) {
-		Optional<User> user = repository.findById(id);
+		Optional<User> user = userRepo.findById(id);
 		if (user.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		repository.deleteById(id);
+		userRepo.deleteById(id);
 		return ResponseEntity.ok().build();
 	}
 
